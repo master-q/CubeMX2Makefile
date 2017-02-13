@@ -30,7 +30,7 @@ mcu_regex_to_cflags_dict = {
 }
 
 def main():
-    
+
     if len(sys.argv) != 2:
         sys.stderr.write("\nSTM32CubeMX project to Makefile V1.9\n")
         sys.stderr.write("-==================================-\n")
@@ -127,8 +127,8 @@ def main():
                             if path_tok == relpath_split[0]:
                                 s['inc_subst'] += path_tok
                             else:
-                                s['inc_subst'] += '/' + path_tok         
-                    
+                                s['inc_subst'] += '/' + path_tok
+
     # .cproject file
     try:
         tree = xml.etree.ElementTree.parse(ac6_cproject_path)
@@ -196,7 +196,14 @@ def main():
         sys.exit(C2M_ERR_IO)
 
     sys.stdout.write("Makefile created: {}\n".format(makefile_path))
-    
+
+    # Copy gdbwrite.boot
+    gdb_file_path_from = os.path.join(app_folder_path, 'gdbwrite.boot')
+    gdb_file_path_to = os.path.join(proj_folder_path, 'gdbwrite.boot')
+    shutil.copy(gdb_file_path_from, gdb_file_path_to)
+
+    sys.stdout.write("gdbwrite.boot created: {}\n".format(gdb_file_path_to))
+
     sys.exit(C2M_ERR_SUCCESS)
 
 

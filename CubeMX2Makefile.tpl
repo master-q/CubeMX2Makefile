@@ -24,7 +24,7 @@ BUILD_DIR = build
 ######################################
 # source
 ######################################
-$C_SOURCES  
+$C_SOURCES
 $ASM_SOURCES
 
 #######################################
@@ -35,9 +35,10 @@ AS = arm-none-eabi-gcc -x assembler-with-cpp
 CP = arm-none-eabi-objcopy
 AR = arm-none-eabi-ar
 SZ = arm-none-eabi-size
+GDB = arm-none-eabi-gdb
 HEX = $$(CP) -O ihex
 BIN = $$(CP) -O binary -S
- 
+
 #######################################
 # CFLAGS
 #######################################
@@ -91,19 +92,25 @@ $$(BUILD_DIR)/$$(TARGET).elf: $$(OBJECTS) Makefile
 
 $$(BUILD_DIR)/%.hex: $$(BUILD_DIR)/%.elf | $$(BUILD_DIR)
 	$$(HEX) $$< $$@
-	
+
 $$(BUILD_DIR)/%.bin: $$(BUILD_DIR)/%.elf | $$(BUILD_DIR)
-	$$(BIN) $$< $$@	
-	
+	$$(BIN) $$< $$@
+
 $$(BUILD_DIR):
-	mkdir -p $$@		
+	mkdir -p $$@
+
+#######################################
+# firmware download using st-util
+#######################################
+gdbwrite:
+	$$(GDB) -x gdbwrite.boot $$(BUILD_DIR)/$$(TARGET).elf
 
 #######################################
 # clean up
 #######################################
 clean:
 	-rm -fR .dep $$(BUILD_DIR)
-  
+
 #######################################
 # dependencies
 #######################################
